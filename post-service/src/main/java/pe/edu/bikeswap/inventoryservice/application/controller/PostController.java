@@ -1,11 +1,12 @@
 package pe.edu.bikeswap.inventoryservice.application.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pe.edu.bikeswap.inventoryservice.domain.model.Post;
 import pe.edu.bikeswap.inventoryservice.domain.service.PostService;
+import pe.edu.bikeswap.inventoryservice.entity.PostEntity;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
+    @Autowired
     public PostController(PostService postService) {
         this.postService = postService;
     }
@@ -23,32 +25,35 @@ public class PostController {
     // Method: GET
     @Transactional(readOnly = true)
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
-        return new ResponseEntity<List<Post>>(postService.getAllPosts(), HttpStatus.OK);
+    public ResponseEntity<List<PostEntity>> getAllPosts() {
+        return new ResponseEntity<>(postService.getAllPosts(), HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/v1/posts/{postId}
     // Method: GET
     @Transactional(readOnly = true)
     @GetMapping("/{postId}")
-    public ResponseEntity<Post> getPostById(@PathVariable(name = "postId") Long postId) {
-        return new ResponseEntity<Post>(postService.getPostById(postId), HttpStatus.OK);
+    public ResponseEntity<PostEntity> getPostById(@PathVariable(name = "postId") Long postId) {
+        PostEntity post = postService.getPostById(postId);
+        return new ResponseEntity<PostEntity>(post, HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/v1/posts
     // Method: POST
     @Transactional
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        return new ResponseEntity<Post>(postService.createPost(post), HttpStatus.CREATED);
+    public ResponseEntity<PostEntity> createPost(@RequestBody PostEntity post) {
+        PostEntity savedPost = postService.createPost(post);
+        return new ResponseEntity<PostEntity>(savedPost, HttpStatus.CREATED);
     }
 
     // URL: http://localhost:8080/api/v1/posts/{postId}
     // Method: PUT
     @Transactional
     @PutMapping("/{postId}")
-    public ResponseEntity<Post> updatePost(@PathVariable(name = "postId") Long postId, @RequestBody Post post) {
-        return new ResponseEntity<Post>(postService.updatePost(post), HttpStatus.OK);
+    public ResponseEntity<PostEntity> updatePost(@PathVariable(name = "postId") Long postId, @RequestBody PostEntity post) {
+        PostEntity updatedPost = postService.updatePost(post);
+        return new ResponseEntity<PostEntity>(updatedPost, HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/v1/posts/{postId}
@@ -64,23 +69,23 @@ public class PostController {
     // Method: GET
     @Transactional(readOnly = true)
     @GetMapping("/active")
-    public ResponseEntity<List<Post>> getAllActivePosts() {
-        return new ResponseEntity<List<Post>>(postService.getAllActivePosts(), HttpStatus.OK);
+    public ResponseEntity<List<PostEntity>> getAllActivePosts() {
+        return new ResponseEntity<List<PostEntity>>(postService.getActivePosts(), HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/v1/posts/bikes/{bikeId}
     // Method: GET
     @Transactional(readOnly = true)
     @GetMapping("/bikes/{bikeId}")
-    public ResponseEntity<List<Post>> getAllPostsByBikeId(@PathVariable(name = "bikeId") Long bikeId) {
-        return new ResponseEntity<List<Post>>(postService.getAllPostsByBikeId(bikeId), HttpStatus.OK);
+    public ResponseEntity<List<PostEntity>> getAllPostsByBikeId(@PathVariable(name = "bikeId") Long bikeId) {
+        return new ResponseEntity<List<PostEntity>>(postService.getPostsByBikeId(bikeId), HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/v1/posts/bikes/{bikeId}/active
     // Method: GET
     @Transactional(readOnly = true)
     @GetMapping("/bikes/{bikeId}/active")
-    public ResponseEntity<List<Post>> getAllActivePostsByBikeId(@PathVariable(name = "bikeId") Long bikeId) {
-        return new ResponseEntity<List<Post>>(postService.getAllActivePostsByBikeId(bikeId), HttpStatus.OK);
+    public ResponseEntity<List<PostEntity>> getAllActivePostsByBikeId(@PathVariable(name = "bikeId") Long bikeId) {
+        return new ResponseEntity<List<PostEntity>>(postService.getActivePostsByBikeId(bikeId), HttpStatus.OK);
     }
 }

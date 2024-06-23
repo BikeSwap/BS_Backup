@@ -1,15 +1,15 @@
 package pe.edu.bikeswap.bike_service.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
-@NoArgsConstructor
 @Entity
 @Table(name="bikes")
+@Data
 public class BikeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
